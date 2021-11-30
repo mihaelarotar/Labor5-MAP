@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"uni"},{"l":"uni.controller"},{"l":"uni.entities"},{"l":"uni.exceptions"},{"l":"uni.repository"},{"l":"uni.view"}];updateSearchResults();
