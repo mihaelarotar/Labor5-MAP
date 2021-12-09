@@ -3,6 +3,8 @@ package uni.controller;
 import uni.entities.Teacher;
 import uni.repository.TeacherJdbcRepository;
 
+import java.sql.SQLException;
+
 public class TeacherController extends Controller<Teacher> {
     public TeacherController(TeacherJdbcRepository repository) {
         super(repository);
@@ -22,7 +24,7 @@ public class TeacherController extends Controller<Teacher> {
      * @param teacherID int, representing the ID of the teacher to be returned
      * @return the teacher with the given ID
      */
-    public Teacher findByID(int teacherID) {
+    public Teacher findByID(int teacherID) throws SQLException {
         TeacherJdbcRepository teacherRepository = (TeacherJdbcRepository) repository;
         return teacherRepository.findByID(teacherID);
     }

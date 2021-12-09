@@ -2,19 +2,42 @@ package uni.repository;
 
 import uni.entities.Teacher;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
+
+    /**
+     * maps each row of data in ResultSet
+     * @param resultSet ResultSet, the ResultSet to be mapped
+     * @return the result object for the current row
+     * @throws SQLException for database access errors
+     */
+    private Teacher mapRow(ResultSet resultSet) throws SQLException {
+        Teacher teacher = new Teacher();
+        teacher.setTeacherID(resultSet.getInt("teacherId"));
+        teacher.setFirstName(resultSet.getString("firstName"));
+        teacher.setLastName(resultSet.getString("lastName"));
+        // todo: teacher.setCourses(getRows());
+        return teacher;
+    }
+
     /**
      * removes the entity with the specified id
-     *
      * @param entity entity must not be null
      * @return the removed entity or null if there is no such entity
      */
     @Override
     public Teacher delete(Teacher entity) {
-        return null;
+        String sql = "delete from Teacher where teacherId=" + entity.getTeacherID();
+        try {
+            updateTable(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return entity;
     }
 
     /**
@@ -22,7 +45,12 @@ public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
      * @param teacherID int, representing the ID of the teacher to be removed
      */
     public void deleteByID(int teacherID) {
-
+        String sql = "delete from Teacher where teacherId=" + teacherID;
+        try {
+            updateTable(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -30,8 +58,9 @@ public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
      * @param teacherID int, representing the ID of the teacher to be returned
      * @return the teacher with the given ID
      */
-    public Teacher findByID(int teacherID) {
-        return null;
+    public Teacher findByID(int teacherID) throws SQLException {
+        String sql = "select * from Teacher where teacherId=" + teacherID;
+        return getEntity(sql, this::mapRow);
     }
 
     /**
@@ -39,18 +68,26 @@ public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
      */
     @Override
     public List<Teacher> getAll() throws SQLException {
-        return null;
+        String sql = "select * from Teacher";
+        return getRows(sql, this::mapRow);
     }
 
     /**
      * saves given entity
-     *
      * @param entity entity must be not null
      * @return the entity - if the given entity was created successfully, otherwise returns null (if the entity already exists)
      */
     @Override
     public Teacher save(Teacher entity) {
-        return null;
+        String sql = String.format("insert into Teacher values(%d, %s, %s)", entity.getTeacherID(), entity.getFirstName(), entity.getLastName());
+        try {
+            updateTable(sql);
+        }
+        catch (SQLException exception) {
+            exception.printStackTrace();
+            return null;
+        }
+        return entity;
     }
 
     /**
@@ -61,6 +98,16 @@ public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
      */
     @Override
     public Teacher update(Teacher entity) {
+        String sql = String.format("update Teacher " +
+                "set firstName=%s, lastName=%s" +
+                "where teacherId=%d", entity.getFirstName(), entity.getLastName(), entity.getTeacherID());
+        try {
+            updateTable(sql);
+        }
+        catch (SQLException exception) {
+            exception.printStackTrace();
+            return entity;
+        }
         return null;
     }
 }

@@ -26,7 +26,7 @@ public class StudentController extends Controller<Student> {
      * @param studentID long int, representing the ID of the student to be returned
      * @return the student with the given ID
      */
-    public Student findByID(long studentID) {
+    public Student findByID(long studentID) throws SQLException {
         StudentJdbcRepository studentRepository = (StudentJdbcRepository) repository;
         return studentRepository.findByID(studentID);
     }

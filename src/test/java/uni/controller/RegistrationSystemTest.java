@@ -40,6 +40,7 @@ class RegistrationSystemTest {
         studentController.add(student2);
         Course databases = new Course("DB", 1,2,4);
         Course oop = new Course("OOP", 2, 50, 5);
+        // todo mocks and tests
         registrationSystem.addCourse(databases);
         registrationSystem.addCourse(oop);
     }

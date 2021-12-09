@@ -132,7 +132,7 @@ public class RegistrationSystem {
      * adds a new course to the list of courses, as well to the teacher's list of courses
      * @param course entity must be not null
      */
-    public void addCourse(Course course) {
+    public void addCourse(Course course) throws SQLException {
         Teacher teacherToBeUpdated = teacherController.findByID(course.getTeacherID());
 
         if(!teacherToBeUpdated.getCourses().contains(course)) {

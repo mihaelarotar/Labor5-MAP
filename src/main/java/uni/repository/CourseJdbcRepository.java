@@ -8,7 +8,12 @@ import java.util.List;
 
 public class CourseJdbcRepository extends JdbcRepository<Course> {
 
-
+    /**
+     * maps each row of data in ResultSet
+     * @param resultSet ResultSet, the ResultSet to be mapped
+     * @return the result object for the current row
+     * @throws SQLException for database access errors
+     */
     private Course mapRow(ResultSet resultSet) throws SQLException {
         Course course = new Course();
         course.setName(resultSet.getString("name"));
