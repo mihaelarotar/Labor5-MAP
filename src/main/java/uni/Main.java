@@ -32,6 +32,9 @@ public class Main {
             System.out.println(course);
         }
 
+        System.out.println("------------");
+        System.out.println(courseController.findByName("DB"));
+
 
     }
 }

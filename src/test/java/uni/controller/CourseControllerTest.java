@@ -2,9 +2,11 @@ package uni.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import uni.entities.Course;
 import uni.repository.CourseJdbcRepository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,8 +18,8 @@ class CourseControllerTest {
     private CourseController courseController;
 
     @BeforeEach
-    void setup() {
-        CourseJdbcRepository courseRepository = new CourseJdbcRepository();
+    void setup() throws SQLException {
+        CourseJdbcRepository courseRepository = Mockito.mock(CourseJdbcRepository.class);
         courseController = new CourseController(courseRepository);
 
         Course databases = new Course("DB", 1, 80, 4);
@@ -29,6 +31,13 @@ class CourseControllerTest {
         courseController.add(oop);
         courseController.add(map);
         courseController.add(algebra);
+
+        List<Course> courses = new ArrayList<>(Arrays.asList(databases, oop, map, algebra));
+        Mockito.when(courseRepository.getAll()).thenReturn(courses);
+        Mockito.when(courseRepository.findByName("DB")).thenReturn(databases);
+        Mockito.when(courseRepository.findByName("OOP")).thenReturn(oop);
+        Mockito.when(courseRepository.findByName("MAP")).thenReturn(map);
+        Mockito.when(courseRepository.findByName("Algebra")).thenReturn(algebra);
     }
 
     @Test

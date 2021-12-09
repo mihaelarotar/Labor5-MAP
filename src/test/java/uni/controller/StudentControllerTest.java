@@ -2,10 +2,12 @@ package uni.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import uni.entities.Student;
 import uni.exceptions.ExceededValueException;
 import uni.repository.StudentJdbcRepository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,8 +19,8 @@ class StudentControllerTest {
     private StudentController studentController;
 
     @BeforeEach
-    void setup() {
-        StudentJdbcRepository studentRepository = new StudentJdbcRepository();
+    void setup() throws SQLException {
+        StudentJdbcRepository studentRepository = Mockito.mock(StudentJdbcRepository.class);
         studentController = new StudentController(studentRepository);
         Student student = new Student("Maria", "Pop", 100);
         Student student1 = new Student("Vlad", "Popa", 101);
@@ -41,6 +43,13 @@ class StudentControllerTest {
         studentController.add(student3);
         studentController.add(student4);
 
+        List<Student> students = new ArrayList<>(Arrays.asList(student, student1, student2, student3, student4));
+        Mockito.when(studentRepository.getAll()).thenReturn(students);
+        Mockito.when(studentRepository.findByID(100)).thenReturn(student);
+        Mockito.when(studentRepository.findByID(101)).thenReturn(student1);
+        Mockito.when(studentRepository.findByID(102)).thenReturn(student2);
+        Mockito.when(studentRepository.findByID(104)).thenReturn(student3);
+        Mockito.when(studentRepository.findByID(105)).thenReturn(student4);
     }
 
     @Test

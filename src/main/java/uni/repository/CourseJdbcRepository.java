@@ -2,27 +2,11 @@ package uni.repository;
 
 import uni.entities.Course;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 public class CourseJdbcRepository extends JdbcRepository<Course> {
 
-    /**
-     * maps each row of data in ResultSet
-     * @param resultSet ResultSet, the ResultSet to be mapped
-     * @return the result object for the current row
-     * @throws SQLException for database access errors
-     */
-    private Course mapRow(ResultSet resultSet) throws SQLException {
-        Course course = new Course();
-        course.setName(resultSet.getString("name"));
-        course.setTeacherID(resultSet.getInt("teacherId"));
-        course.setMaxEnrollment(resultSet.getInt("maxEnrollment"));
-        course.setCredits(resultSet.getInt("credits"));
-        // todo: course.setStudentsEnrolled(getRows(""));
-        return course;
-    }
 
     /**
      * returns the course with the given name
@@ -30,8 +14,8 @@ public class CourseJdbcRepository extends JdbcRepository<Course> {
      * @return the course with the given name
      */
     public Course findByName(String courseName) throws SQLException {
-        String sql = "select * from Course where name=" + courseName;
-        return getEntity(sql, this::mapRow);
+        String sql = String.format("select * from Course where name='%s' ", courseName);
+        return getEntity(sql, new CourseRowMapper());
     }
 
     /**
@@ -40,7 +24,7 @@ public class CourseJdbcRepository extends JdbcRepository<Course> {
     @Override
     public List<Course> getAll() throws SQLException {
         String sql = "select * from Course";
-        return getRows(sql, this::mapRow);
+        return getRows(sql, new CourseRowMapper());
     }
 
     /**
@@ -51,7 +35,7 @@ public class CourseJdbcRepository extends JdbcRepository<Course> {
      */
     @Override
     public Course save(Course entity) {
-        String sql = String.format("insert into Course values(%s, %d, %d, %d)", entity.getName(), entity.getTeacherID(), entity.getMaxEnrollment(), entity.getCredits());
+        String sql = String.format("insert into Course values('%s', %d, %d, %d)", entity.getName(), entity.getTeacherID(), entity.getMaxEnrollment(), entity.getCredits());
         try {
             updateTable(sql);
         }
@@ -69,7 +53,7 @@ public class CourseJdbcRepository extends JdbcRepository<Course> {
      */
     @Override
     public Course delete(Course entity) {
-        String sql = "delete from Course where name=" + entity.getName();
+        String sql = String.format("delete from Course where name='%s'",  entity.getName());
         try {
             updateTable(sql);
         } catch (SQLException e) {
@@ -85,7 +69,7 @@ public class CourseJdbcRepository extends JdbcRepository<Course> {
      * @param name string, representing the name of the course to be deleted
      */
     public void deleteByName(String name) {
-        String sql = "delete from Course where name=" + name;
+        String sql = String.format("delete from Course where name='%s'", name);
         try {
             updateTable(sql);
         } catch (SQLException e) {
@@ -102,7 +86,7 @@ public class CourseJdbcRepository extends JdbcRepository<Course> {
     public Course update(Course entity) {
         String sql = String.format("update Course " +
                 "set teacherId=%d, maxEnrollment=%d, credits=%d" +
-                "where name=%s", entity.getTeacherID(), entity.getMaxEnrollment(), entity.getCredits(), entity.getName());
+                "where name='%s'", entity.getTeacherID(), entity.getMaxEnrollment(), entity.getCredits(), entity.getName());
         try {
             updateTable(sql);
         }

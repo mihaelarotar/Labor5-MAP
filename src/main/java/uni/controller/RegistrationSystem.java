@@ -7,6 +7,9 @@ import uni.exceptions.ExceededValueException;
 import uni.exceptions.NonExistingDataException;
 
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +75,30 @@ public class RegistrationSystem {
             System.out.println(exception.getMessage());
             return false;
         }
+        insertIntoEnrolled(studentID, courseName);
         return true;
+    }
+
+    /**
+     * opens a connection to a certain database
+     * @return the new connection
+     * @throws SQLException for database access errors
+     */
+    public Connection getConnection() throws SQLException {
+        String url = "jdbc:mysql://localhost:3306/university";
+        String user = "user1";
+        String pass = "pass";
+
+        return DriverManager.getConnection(url, user, pass);
+    }
+
+    public void insertIntoEnrolled(long studentId, String courseName) throws SQLException {
+        String sql = String.format("insert into Enrolled values(%d, '%s')", studentId, courseName);
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.executeUpdate();
+
+        connection.close();
     }
 
     /**
@@ -133,8 +159,10 @@ public class RegistrationSystem {
      * @param course entity must be not null
      */
     public void addCourse(Course course) throws SQLException {
-        Teacher teacherToBeUpdated = teacherController.findByID(course.getTeacherID());
-
+        Teacher teacherToBeUpdated = teacherController.getAll().stream()
+                .filter(teacher -> teacher.getTeacherID() == course.getTeacherID())
+                .findFirst()
+                .orElseThrow();
         if(!teacherToBeUpdated.getCourses().contains(course)) {
             teacherToBeUpdated.addCourseToCourses(course);
         }

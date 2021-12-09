@@ -1,21 +1,23 @@
 package uni.controller;
 
-import uni.repository.ICrudRepository;
+import uni.repository.JdbcRepository;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class Controller<E> {
-    protected final ICrudRepository<E> repository;
+    protected final JdbcRepository<E> repository;
 
-    protected Controller(ICrudRepository<E> repository) {
+    protected Controller(JdbcRepository<E> repository) {
         this.repository = repository;
     }
 
     /**
      * adds given entity
+     *
      * @param entity entity must be not null
      */
     public void add(E entity) {
@@ -65,4 +67,5 @@ public abstract class Controller<E> {
     public void sort(Comparator<E> comparator) throws SQLException {
         repository.getAll().sort(comparator);
     }
+
 }

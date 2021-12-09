@@ -2,26 +2,12 @@ package uni.repository;
 
 import uni.entities.Teacher;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
 
-    /**
-     * maps each row of data in ResultSet
-     * @param resultSet ResultSet, the ResultSet to be mapped
-     * @return the result object for the current row
-     * @throws SQLException for database access errors
-     */
-    private Teacher mapRow(ResultSet resultSet) throws SQLException {
-        Teacher teacher = new Teacher();
-        teacher.setTeacherID(resultSet.getInt("teacherId"));
-        teacher.setFirstName(resultSet.getString("firstName"));
-        teacher.setLastName(resultSet.getString("lastName"));
-        // todo: teacher.setCourses(getRows());
-        return teacher;
-    }
+
 
     /**
      * removes the entity with the specified id
@@ -30,7 +16,7 @@ public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
      */
     @Override
     public Teacher delete(Teacher entity) {
-        String sql = "delete from Teacher where teacherId=" + entity.getTeacherID();
+        String sql = String.format("delete from Teacher where teacherId=%d",  entity.getTeacherID());
         try {
             updateTable(sql);
         } catch (SQLException e) {
@@ -45,7 +31,7 @@ public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
      * @param teacherID int, representing the ID of the teacher to be removed
      */
     public void deleteByID(int teacherID) {
-        String sql = "delete from Teacher where teacherId=" + teacherID;
+        String sql = String.format("delete from Teacher where teacherId= %d", teacherID);
         try {
             updateTable(sql);
         } catch (SQLException e) {
@@ -59,8 +45,8 @@ public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
      * @return the teacher with the given ID
      */
     public Teacher findByID(int teacherID) throws SQLException {
-        String sql = "select * from Teacher where teacherId=" + teacherID;
-        return getEntity(sql, this::mapRow);
+        String sql = String.format("select * from Teacher where teacherId= %d", teacherID);
+        return getEntity(sql, new TeacherRowMapper());
     }
 
     /**
@@ -69,7 +55,7 @@ public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
     @Override
     public List<Teacher> getAll() throws SQLException {
         String sql = "select * from Teacher";
-        return getRows(sql, this::mapRow);
+        return getRows(sql, new TeacherRowMapper());
     }
 
     /**
@@ -79,7 +65,7 @@ public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
      */
     @Override
     public Teacher save(Teacher entity) {
-        String sql = String.format("insert into Teacher values(%d, %s, %s)", entity.getTeacherID(), entity.getFirstName(), entity.getLastName());
+        String sql = String.format("insert into Teacher values(%d, '%s', '%s')", entity.getTeacherID(), entity.getFirstName(), entity.getLastName());
         try {
             updateTable(sql);
         }
@@ -99,8 +85,8 @@ public class TeacherJdbcRepository extends JdbcRepository<Teacher> {
     @Override
     public Teacher update(Teacher entity) {
         String sql = String.format("update Teacher " +
-                "set firstName=%s, lastName=%s" +
-                "where teacherId=%d", entity.getFirstName(), entity.getLastName(), entity.getTeacherID());
+                "set firstName= '%s', lastName= '%s'" +
+                "where teacherId= %d", entity.getFirstName(), entity.getLastName(), entity.getTeacherID());
         try {
             updateTable(sql);
         }
