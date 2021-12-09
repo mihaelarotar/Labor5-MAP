@@ -1,22 +1,17 @@
 package uni.repository;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
  * CRUD operations repository interface
  */
 public interface ICrudRepository<E> {
-    /**
-     * searches for the index of the entity in the list
-     * @param entity -the entity to be searched
-     * @return the index of the given entity or -1 if there is no such entity
-     */
-    int findIndex(E entity);
 
     /**
      * @return all entities
      */
-    List<E> getAll();
+    List<E> getAll() throws SQLException;
 
     /**
      * saves given entity

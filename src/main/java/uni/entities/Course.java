@@ -16,7 +16,6 @@ public class Course {
     public Course() {
     }
 
-    // todo : inlocuit teacher cu teacher ID si actualizat in lista de teachers de fiecare data
     public Course(String name, int teacherID, int maxEnrollment, int credits) {
         if (name.isEmpty()) {
             throw new InvalidDataException("Name cannot be null");
@@ -88,7 +87,7 @@ public class Course {
     public String toString() {
         return "Course{" +
                 "name='" + name + '\'' +
-                ", teacher=" + teacherID +
+                ", teacherID=" + teacherID +
                 ", maxEnrollment=" + maxEnrollment +
                 ", studentsEnrolled=" + studentsEnrolled +
                 ", credits=" + credits +

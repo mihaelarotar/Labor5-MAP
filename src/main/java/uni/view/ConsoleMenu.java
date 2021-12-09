@@ -6,6 +6,7 @@ import uni.entities.Student;
 import uni.entities.Teacher;
 import uni.exceptions.NonExistingDataException;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,6 +14,7 @@ public class ConsoleMenu {
     private final RegistrationSystem control;
 
     public ConsoleMenu(RegistrationSystem control) {
+
         this.control = control;
     }
 
@@ -48,7 +50,7 @@ public class ConsoleMenu {
     /**
      * switches through all the possible options
      */
-    public void startConsole() {
+    public void startConsole() throws SQLException {
         showMenu();
         while(true) {
             Scanner myInput = new Scanner(System.in);
@@ -68,7 +70,7 @@ public class ConsoleMenu {
                     break;
                 case 3:
                     Course course = createCourse();
-                    control.getCourseController().add(course);
+                    control.addCourse(course);
                     break;
                 case 4:
                     myInput.nextLine();
@@ -86,7 +88,7 @@ public class ConsoleMenu {
                     myInput.nextLine();
                     System.out.println("Give name: ");
                     String name = myInput.nextLine();
-                    control.getCourseController().deleteByName(name);
+                    control.deleteCourse(name);
                     break;
                 case 7:
                     control.getStudentController().update(createStudent());
@@ -98,8 +100,14 @@ public class ConsoleMenu {
                     control.getCourseController().update(createCourse());
                     break;
                 case 10:
+                    myInput.nextLine();
+                    System.out.println("Give course name: ");
+                    String courseName = myInput.nextLine();
+                    myInput.nextLine();
+                    System.out.println("Give student ID: ");
+                    int studentID = myInput.nextInt();
                     try {
-                        control.register(createCourse(), createStudent());
+                        control.register(courseName, studentID);
                     } catch (NonExistingDataException exception) {
                         System.out.println(exception.getMessage());
                     }
@@ -177,12 +185,13 @@ public class ConsoleMenu {
         Scanner in = new Scanner(System.in);
         System.out.println("Give course title: ");
         String name = in.nextLine();
-        Teacher teacher = createTeacher();
+        System.out.println("Give teacher ID: ");
+        int teacherID = in.nextInt();
         System.out.println("Give max number of enrolled students: ");
         int maxEnrollment = in.nextInt();
         System.out.println("Give number of credits: ");
         int credits = in.nextInt();
-        return new Course(name, teacher.getTeacherID(), maxEnrollment, credits);
+        return new Course(name, teacherID, maxEnrollment, credits);
     }
 
     /**

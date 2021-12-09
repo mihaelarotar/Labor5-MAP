@@ -1,15 +1,16 @@
 package uni.controller;
 
 import uni.entities.Course;
-import uni.repository.CourseRepository;
+import uni.repository.CourseJdbcRepository;
 
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 
 
 public class CourseController extends Controller<Course> {
 
-    public CourseController(CourseRepository courseRepository) {
+    public CourseController(CourseJdbcRepository courseRepository) {
         super(courseRepository);
     }
 
@@ -19,8 +20,18 @@ public class CourseController extends Controller<Course> {
      * @param name string, representing the name of the course to be deleted
      */
     public void deleteByName(String name) {
-        CourseRepository courseRepository = (CourseRepository) repository;
+        CourseJdbcRepository courseRepository = (CourseJdbcRepository) repository;
         courseRepository.deleteByName(name);
+    }
+
+    /**
+     * returns the course with the given name
+     * @param name string, representing the title of the course to be returned
+     * @return the course with the given name
+     */
+    public Course findByName(String name) throws SQLException {
+        CourseJdbcRepository courseRepository = (CourseJdbcRepository) repository;
+        return courseRepository.findByName(name);
     }
 
     /**
@@ -28,14 +39,14 @@ public class CourseController extends Controller<Course> {
      * @param credits the number of credits of the courses to be shown
      * @return the courses with the number of credits equal to the parameter
      */
-    public List<Course> filterByCredits(int credits) {
+    public List<Course> filterByCredits(int credits) throws SQLException {
         return filter( course -> course.getCredits() == credits);
     }
 
     /**
      * sorts courses alphabetically by name
      */
-    public void sortByName() {
+    public void sortByName() throws SQLException {
         Comparator<Course> compareByName = Comparator.comparing(Course::getName);
         sort(compareByName);
     }
@@ -43,7 +54,7 @@ public class CourseController extends Controller<Course> {
     /**
      * sorts courses ascending by the number of credits
      */
-    public void sortByCredits() {
+    public void sortByCredits() throws SQLException {
         Comparator<Course> compareByCredits = Comparator.comparingInt(Course::getCredits);
         sort(compareByCredits);
     }

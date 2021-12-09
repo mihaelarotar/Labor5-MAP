@@ -4,11 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uni.entities.Student;
 import uni.exceptions.ExceededValueException;
-import uni.repository.StudentRepository;
+import uni.repository.StudentJdbcRepository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class StudentControllerTest {
 
@@ -16,7 +18,7 @@ class StudentControllerTest {
 
     @BeforeEach
     void setup() {
-        StudentRepository studentRepository = new StudentRepository();
+        StudentJdbcRepository studentRepository = new StudentJdbcRepository();
         studentController = new StudentController(studentRepository);
         Student student = new Student("Maria", "Pop", 100);
         Student student1 = new Student("Vlad", "Popa", 101);
@@ -42,21 +44,24 @@ class StudentControllerTest {
     }
 
     @Test
-    void filterByTotalCredits() {
+    void filterByTotalCredits() throws Exception{
         List<Student> filteredStudents = studentController.filterByTotalCredits(25);
-        assertEquals(filteredStudents.size(), 2);
-        assertEquals(filteredStudents.get(0).getStudentID(), 101);
+        assertEquals(filteredStudents, new ArrayList<>(Arrays.asList(studentController.findByID(101), studentController.findByID(102))));
     }
 
     @Test
-    void sortByName() {
+    void sortByName() throws Exception{
         studentController.sortByName();
-        assertEquals(studentController.getAll().get(0).getStudentID(), 104);
+        assertEquals(studentController.getAll(), new ArrayList<>(Arrays.asList(studentController.findByID(104),
+                studentController.findByID(105), studentController.findByID(100),
+                studentController.findByID(102), studentController.findByID(101))));
     }
 
     @Test
-    void sortByCreditsDescending() {
+    void sortByCreditsDescending() throws Exception{
         studentController.sortByCreditsDescending();
-        assertEquals(studentController.getAll().get(0).getStudentID(), 100);
+        assertEquals(studentController.getAll(), new ArrayList<>(Arrays.asList(studentController.findByID(100),
+                studentController.findByID(101), studentController.findByID(102),
+                studentController.findByID(105), studentController.findByID(104))));
     }
 }

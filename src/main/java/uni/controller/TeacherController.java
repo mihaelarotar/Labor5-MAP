@@ -1,11 +1,10 @@
 package uni.controller;
 
 import uni.entities.Teacher;
-import uni.repository.InMemoryRepository;
-import uni.repository.TeacherRepository;
+import uni.repository.TeacherJdbcRepository;
 
 public class TeacherController extends Controller<Teacher> {
-    public TeacherController(InMemoryRepository<Teacher> repository) {
+    public TeacherController(TeacherJdbcRepository repository) {
         super(repository);
     }
 
@@ -14,7 +13,17 @@ public class TeacherController extends Controller<Teacher> {
      * @param teacherID int, representing the ID of the teacher to be removed
      */
     public void deleteByID(int teacherID) {
-        TeacherRepository teacherRepository = (TeacherRepository) repository;
+        TeacherJdbcRepository teacherRepository = (TeacherJdbcRepository) repository;
         teacherRepository.deleteByID(teacherID);
+    }
+
+    /**
+     * returns the teacher with the given ID
+     * @param teacherID int, representing the ID of the teacher to be returned
+     * @return the teacher with the given ID
+     */
+    public Teacher findByID(int teacherID) {
+        TeacherJdbcRepository teacherRepository = (TeacherJdbcRepository) repository;
+        return teacherRepository.findByID(teacherID);
     }
 }

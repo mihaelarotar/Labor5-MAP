@@ -3,11 +3,13 @@ package uni.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uni.entities.Course;
-import uni.repository.CourseRepository;
+import uni.repository.CourseJdbcRepository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CourseControllerTest {
 
@@ -15,10 +17,9 @@ class CourseControllerTest {
 
     @BeforeEach
     void setup() {
-        CourseRepository courseRepository = new CourseRepository();
+        CourseJdbcRepository courseRepository = new CourseJdbcRepository();
         courseController = new CourseController(courseRepository);
-        /*Teacher teacher = new Teacher("Ana", "Pop", 1);
-        Teacher teacher1 = new Teacher("Jane", "Smith",2);*/
+
         Course databases = new Course("DB", 1, 80, 4);
         Course oop = new Course("OOP", 2, 100, 6);
         Course map = new Course("MAP", 2, 50, 6);
@@ -31,24 +32,23 @@ class CourseControllerTest {
     }
 
     @Test
-    void filterByCredits() {
+    void filterByCredits() throws Exception {
         List<Course> filteredCourses = courseController.filterByCredits(6);
-        assertEquals(filteredCourses.size(), 2);
-        assertEquals(filteredCourses.get(0).getName(), "OOP");
-        assertEquals(filteredCourses.get(1).getName(), "MAP");
+        assertEquals(filteredCourses, new ArrayList<>(Arrays.asList(courseController.findByName("OOP"), courseController.findByName("MAP"))));
 
     }
 
     @Test
-    void sortByName() {
+    void sortByName() throws Exception{
         courseController.sortByName();
-        assertEquals(courseController.getAll().get(0).getName(), "Algebra");
+        assertEquals(courseController.getAll(), new ArrayList<>(Arrays.asList(courseController.findByName("Algebra"), courseController.findByName("DB"),
+                courseController.findByName("MAP"), courseController.findByName("OOP"))));
     }
 
     @Test
-    void sortByCredits() {
+    void sortByCredits() throws Exception{
         courseController.sortByCredits();
-        assertEquals(courseController.getAll().get(0).getName(), "DB");
-        assertEquals(courseController.getAll().get(1).getName(), "Algebra");
+        assertEquals(courseController.getAll(), new ArrayList<>(Arrays.asList(courseController.findByName("DB"), courseController.findByName("Algebra"),
+                courseController.findByName("OOP"), courseController.findByName("MAP"))));
     }
 }
