@@ -5,6 +5,7 @@ import uni.exceptions.ExceededValueException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class StudentRowMapper implements RowMapper<Student> {
     /**
@@ -25,11 +26,8 @@ public class StudentRowMapper implements RowMapper<Student> {
         } catch (ExceededValueException e) {
             e.printStackTrace();
         }
-        String sql = String.format("select * from Course C inner join Enrolled E " +
-                "on C.name = E.courseName " +
-                "where E.studentId= '%s'",  student.getStudentID());
 
-        student.setEnrolledCourses(new CourseJdbcRepository().getRows(sql, new CourseRowMapper()));
+        student.setEnrolledCourses(new ArrayList<>());
         return student;
     }
 }

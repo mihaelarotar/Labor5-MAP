@@ -1,5 +1,6 @@
 package uni.controller;
 
+import uni.repository.ICrudRepository;
 import uni.repository.JdbcRepository;
 
 import java.sql.Connection;
@@ -9,9 +10,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class Controller<E> {
-    protected final JdbcRepository<E> repository;
+    protected final ICrudRepository<E> repository;
 
-    protected Controller(JdbcRepository<E> repository) {
+    protected Controller(ICrudRepository<E> repository) {
         this.repository = repository;
     }
 

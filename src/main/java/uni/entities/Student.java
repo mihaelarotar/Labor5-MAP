@@ -73,7 +73,7 @@ public class Student extends Person{
                 ", firstName=" + getFirstName() +
                 ", lastName=" + getLastName() +
                 ", totalCredits=" + totalCredits +
-                ", enrolledCourses=" + courses +
+               // ", enrolledCourses=" + courses +
                 '}';
     }
 

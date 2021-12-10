@@ -116,7 +116,10 @@ public class ConsoleMenu {
                     printCourses(control.retrieveCoursesWithFreePlaces());
                     break;
                 case 12:
-                    printStudents(control.retrieveStudentsEnrolledForACourse(createCourse()));
+                    myInput.nextLine();
+                    System.out.println("Give course name: ");
+                    courseName = myInput.nextLine();
+                    printStudents(control.retrieveStudentsEnrolledForACourse(courseName));
                     break;
                 case 13:
                     printCourses(control.getAllCourses());

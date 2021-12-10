@@ -63,7 +63,7 @@ public class RegistrationSystem {
             return false;
         }
 
-        if (course.getStudentsEnrolled().contains(student) || student.getEnrolledCourses().contains(course)) {
+        if (course.getStudentsEnrolled().contains(student)) {
             return false;
         }
 
@@ -120,13 +120,8 @@ public class RegistrationSystem {
      * @param course the given course
      * @return a new list containing all the enrolled students
      */
-    public List<Student> retrieveStudentsEnrolledForACourse(Course course) throws SQLException {
-        List<Student> enrolledStudents = new ArrayList<>();
-        for (Student student : studentController.getAll()) {
-            if (student.getEnrolledCourses().contains(course))
-                enrolledStudents.add(student);
-        }
-        return enrolledStudents;
+    public List<Student> retrieveStudentsEnrolledForACourse(String course) throws SQLException {
+        return courseController.findByName(course).getStudentsEnrolled();
     }
 
     /**
