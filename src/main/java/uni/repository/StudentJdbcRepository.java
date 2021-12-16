@@ -85,7 +85,7 @@ public class StudentJdbcRepository extends JdbcRepository<Student> {
     @Override
     public Student update(Student entity) {
         String sql = String.format("update Student " +
-                "set firstName='%s', lastName='%s', totalCredits=%d" +
+                "set firstName='%s', lastName='%s', totalCredits=%d " +
                 "where studentId=%d", entity.getFirstName(), entity.getLastName(), entity.getTotalCredits(), entity.getStudentID());
         try {
             updateTable(sql);

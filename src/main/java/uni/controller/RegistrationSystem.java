@@ -64,17 +64,22 @@ public class RegistrationSystem {
         }
 
         if (course.getStudentsEnrolled().contains(student)) {
+            System.out.println("Student already registered");
             return false;
         }
 
 
         try {
+            int credits = student.getTotalCredits()+course.getCredits();
+            student.setTotalCredits(credits);
+            studentController.update(student);
             student.addCourseToEnrolledCourses(course);
             course.addStudentToStudentsEnrolled(student);
         } catch (ExceededValueException exception) {
             System.out.println(exception.getMessage());
             return false;
         }
+
         insertIntoEnrolled(studentID, courseName);
         return true;
     }

@@ -103,13 +103,19 @@ public class ConsoleMenu {
                     myInput.nextLine();
                     System.out.println("Give course name: ");
                     String courseName = myInput.nextLine();
-                    myInput.nextLine();
                     System.out.println("Give student ID: ");
                     int studentID = myInput.nextInt();
+                    boolean result = false;
                     try {
-                        control.register(courseName, studentID);
+                        result=control.register(courseName, studentID);
                     } catch (NonExistingDataException exception) {
                         System.out.println(exception.getMessage());
+                    }
+                    if (result) {
+                        System.out.println("Student enrolled successfully");
+                    }
+                    else {
+                        System.out.println("Error, student wasn't enrolled");
                     }
                     break;
                 case 11:

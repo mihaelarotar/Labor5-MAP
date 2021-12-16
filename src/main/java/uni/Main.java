@@ -25,15 +25,15 @@ public class Main {
         TeacherController teacherController = new TeacherController(teacherRepository);
 
         RegistrationSystem registrationSystem = new RegistrationSystem(studentController, courseController, teacherController);
-        //ConsoleMenu consoleMenu = new ConsoleMenu(registrationSystem);
-        //consoleMenu.startConsole();
+        ConsoleMenu consoleMenu = new ConsoleMenu(registrationSystem);
+        consoleMenu.startConsole();
 
-        for (Course course : courseController.getAll()) {
+        /*for (Course course : courseController.getAll()) {
             System.out.println(course);
         }
 
         System.out.println("------------");
-        System.out.println(courseController.findByName("DB"));
+        System.out.println(courseController.findByName("DB"));*/
 
         /*try {
             registrationSystem.register("DB",100);
