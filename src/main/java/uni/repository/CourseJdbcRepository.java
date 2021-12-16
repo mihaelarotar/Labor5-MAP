@@ -2,6 +2,8 @@ package uni.repository;
 
 import uni.entities.Course;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -52,7 +54,12 @@ public class CourseJdbcRepository extends JdbcRepository<Course> {
      * @return the removed entity or null if there is no such entity
      */
     @Override
-    public Course delete(Course entity) {
+    public Course delete(Course entity)  {
+        try {
+            deleteFromEnrolled(entity.getName());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         String sql = String.format("delete from Course where name='%s'",  entity.getName());
         try {
             updateTable(sql);
@@ -61,6 +68,15 @@ public class CourseJdbcRepository extends JdbcRepository<Course> {
             return null;
         }
         return entity;
+    }
+
+    public void deleteFromEnrolled(String courseName) throws SQLException {
+        String sql = String.format("delete from Enrolled where courseName='%s'", courseName);
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.executeUpdate();
+
+        connection.close();
     }
 
     /**
